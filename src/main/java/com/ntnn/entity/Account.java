@@ -2,8 +2,17 @@ package com.ntnn.entity;
 
 import com.ntnn.common.Currency;
 import com.ntnn.common.WalletType;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.Date;
 
@@ -12,25 +21,23 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "ACCOUNT")
-@IdClass(Account.class)
+@Table("ACCOUNT")
 public class Account {
     @Id
     private String accountId;
 
-    @Id
-    @Column(name = "WALLET_TYPE")
+    @Column("WALLET_TYPE")
     @Enumerated(EnumType.ORDINAL)
     private WalletType walletType;
 
-    @Id
-    @Column(name = "CURRENCY")
+    @Column("CURRENCY")
     @Enumerated(EnumType.ORDINAL)
     private Currency currency;
 
-    @Id
-    @Column(name = "CREATION_DATE")
+    @Column("CREATION_DATE")
     private Date creationDate;
 
+    @Version
+    private Long version;
 
 }

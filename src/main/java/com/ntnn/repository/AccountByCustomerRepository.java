@@ -1,8 +1,11 @@
 package com.ntnn.repository;
 
 import com.ntnn.entity.Account;
-import com.ntnn.entity.AccountKey;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.stereotype.Repository;
 
-public interface AccountByCustomerRepository extends ReactiveCrudRepository<Account, AccountKey> {
+import java.util.UUID;
+
+@Repository
+public interface AccountByCustomerRepository extends ReactiveCrudRepository<Account, UUID> {
 }

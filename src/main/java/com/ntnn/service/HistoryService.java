@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class HistoryService {
-    private final DatabaseService service;
+    private final DatabaseImplService service;
 
     public GenericSingleRestResponse saveTopUpTransactionAsyncAsHistory(final Document document, final String accountId, final GenericSingleRestResponse genericSingleRestResponse) {
         service.saveTopUpTransaction(document, accountId, StatusType.PENDING)
                 .forEach(transaction -> genericSingleRestResponse.getCdtTrfTxInfSts().add(
-                        new CreditTransferTransaction30Status(null, transaction.getEndToEndId(), transaction.getTransactionId(), null, true)));
+                        new CreditTransferTransaction30Status(null, transaction.getEndToEndId(), transaction.getTransactionId(), null, true, null, null)));
         return genericSingleRestResponse;
     }
 

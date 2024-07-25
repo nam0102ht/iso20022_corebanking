@@ -1,8 +1,12 @@
 package com.ntnn.repository;
 
 import com.ntnn.entity.History;
-import com.ntnn.entity.HistoryKey;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.stereotype.Repository;
 
-public interface HistoryRepository extends ReactiveCrudRepository<History, HistoryKey> {
+import java.util.UUID;
+
+
+@Repository
+public interface HistoryRepository extends ReactiveCrudRepository<History, UUID> {
 }

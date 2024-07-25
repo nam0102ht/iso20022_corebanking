@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: transfer
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/postgres
+    username: root
+    password: root
+
+server:
+  port: 8083
+  servlet:
+    contextPath: /transfer
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    preferIpAddress: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

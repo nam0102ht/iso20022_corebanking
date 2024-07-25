@@ -1,8 +1,11 @@
 package com.ntnn.repository;
 
 import com.ntnn.entity.Transaction;
-import com.ntnn.entity.TransactionKey;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.stereotype.Repository;
 
-public interface AsyncTransactionByCustomerRepository extends ReactiveCrudRepository<Transaction, TransactionKey> {
+import java.util.UUID;
+
+@Repository
+public interface AsyncTransactionByCustomerRepository extends ReactiveCrudRepository<Transaction, UUID> {
 }

@@ -5,14 +5,13 @@ import com.ntnn.common.StatusType;
 import com.ntnn.common.TransactionType;
 import com.ntnn.common.WalletType;
 import com.ntnn.entity.History;
-import com.ntnn.entity.HistoryKey;
 import com.ntnn.entity.Transaction;
-import com.ntnn.entity.TransactionKey;
 import com.ntnn.wsld.FIToFICustomerCreditTransferV07;
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public class Iso20022TransactionHelper {
     public static Set<Transaction> populateTransaction(FIToFICustomerCreditTransferV07 model, String accountId, String transactionType, StatusType statusType) {
@@ -25,22 +24,19 @@ public class Iso20022TransactionHelper {
             String destinationId = model.getCdtTrfTxInf().get(i).getCdtrAcct().getId().getOthr().getId();
             String destinationName = model.getCdtTrfTxInf().get(i).getCdtrAgt().getFinInstnId().getBICFI() == null ?
                     model.getCdtTrfTxInf().get(i).getCdtrAgt().getFinInstnId().getOthr().getId() : model.getCdtTrfTxInf().get(i).getCdtrAgt().getFinInstnId().getBICFI();
-            TransactionKey key = new TransactionKey(model.getCdtTrfTxInf().get(i).getPmtId().getTxId(),
-                    accountId,
-                    model.getGrpHdr().getCreDtTm().toGregorianCalendar().getTime(),
-                    statusType);
-            transactions.add(new Transaction(key.getAccountId(),
-                    key.getTransactionId(),
-                    statusType,
-                    key.getCreationDate(),
-                    model.getCdtTrfTxInf().get(i).getIntrBkSttlmAmt().getValue(),
-                    TransactionType.valueOf(transactionType),
-                    sourceName,
-                    sourceId,
-                    destinationName,
-                    destinationId,
-                    endToEndId
-                    ));
+
+            Transaction transaction = new Transaction();
+            transaction.setId(UUID.randomUUID());
+            transaction.setAccountId(accountId);
+            transaction.setTransactionId(model.getCdtTrfTxInf().get(i).getPmtId().getTxId());
+            transaction.setTransactionType(TransactionType.valueOf(transactionType));
+            transaction.setCreationDate(model.getGrpHdr().getCreDtTm().toGregorianCalendar().getTime());
+            transaction.setAmount(model.getCdtTrfTxInf().get(i).getIntrBkSttlmAmt().getValue());
+            transaction.setSourceId(sourceId);
+            transaction.setDestinationName(destinationName);
+            transaction.setDestinationId(destinationId);
+            transaction.setEndToEndId(endToEndId);
+            transactions.add(transaction);
         }
         return transactions;
     }
@@ -48,31 +44,31 @@ public class Iso20022TransactionHelper {
     public static Set<History> populateHistory(FIToFICustomerCreditTransferV07 model,
                                                String accountId,
                                                StatusType statusType
-                                               ) {
+    ) {
         Set<History> transactions = new HashSet<>(model.getCdtTrfTxInf().size());
         for (int i = 0; i < model.getCdtTrfTxInf().size(); i++) {
             WalletType walletType = WalletType.valueOf(model.getCdtTrfTxInf().get(i).getChrgBr().value());
             Currency currency = Currency.valueOf(model.getCdtTrfTxInf().get(i).getIntrBkSttlmAmt().getCcy());
-            HistoryKey key = new HistoryKey(model.getCdtTrfTxInf().get(i).getPmtId().getTxId(),
-                    accountId,
-                    model.getGrpHdr().getCreDtTm().toGregorianCalendar().getTime(),
-                    walletType,
-                    currency,
-                    statusType);
+
             History history = new History();
-            history.setTransactionId(key.getTransactionId());
-            history.setAccountId(key.getAccountId());
+            history.setTransactionId(model.getCdtTrfTxInf().get(i).getPmtId().getTxId());
+            history.setAccountId(accountId);
+            history.setId(UUID.randomUUID());
+            history.setCurrency(currency);
+            history.setStatusType(statusType);
+            history.setWalletType(walletType);
             history.setCurrency(currency);
             history.setCreationDate(new Date(model.getGrpHdr().getCreDtTm().toGregorianCalendar().toZonedDateTime().toEpochSecond()));
             history.setStatusType(statusType);
-            transactions.add(new History(
-                    history.getAccountId(),
-                    history.getTransactionId(),
-                    history.getCreationDate(),
-                    history.getWalletType(),
-                    history.getCurrency(),
-                    history.getStatusType()
-            ));
+
+            transactions.add(History.builder()
+                    .accountId(history.getAccountId())
+                    .transactionId(history.getTransactionId())
+                    .creationDate(history.getCreationDate())
+                    .walletType(history.getWalletType())
+                    .currency(history.getCurrency())
+                    .statusType(history.getStatusType())
+                    .build());
         }
         return transactions;
     }

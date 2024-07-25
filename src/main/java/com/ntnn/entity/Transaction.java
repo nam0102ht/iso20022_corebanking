@@ -2,82 +2,65 @@ package com.ntnn.entity;
 
 import com.ntnn.common.StatusType;
 import com.ntnn.common.TransactionType;
-import jakarta.persistence.*;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.UUID;
 
-@Table(name= "TRANSACTION")
-@IdClass(TransactionKey.class)
+@Table("TRANSACTION")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode
 public class Transaction {
     @Id
-    @Column(name = "ACCOUNT_ID")
+    private UUID id;
+
+    @Column("ACCOUNT_ID")
     private String accountId;
 
-    @Id
-    @Column(name = "TRANSACTION_ID")
+    @Column("TRANSACTION_ID")
     private String transactionId;
 
-    @Id
-    @Column(name = "STATUS_TYPE")
+    @Column("STATUS_TYPE")
     private StatusType statusType;
 
-    @Id
-    @Column(name = "CREATION_DATE")
+    @Column("CREATION_DATE")
     private Date creationDate;
 
-    @Column(name = "AMOUNT", nullable = false)
+    @Column("AMOUNT")
     private BigDecimal amount;
 
-    @Column(name = "TRANSACTION_TYPE", nullable = false)
+    @Column("TRANSACTION_TYPE")
     @Enumerated(EnumType.ORDINAL)
     private TransactionType transactionType;
 
-    @Column(name = "SOURCE_NAME")
+    @Column("SOURCE_NAME")
     private String sourceName;
 
-    @Column(name = "SOURCE_ID")
+    @Column("SOURCE_ID")
     private String sourceId;
 
-    @Column(name = "DESTINATION_NAME")
+    @Column("DESTINATION_NAME")
     private String destinationName;
 
-    @Column(name = "DESTINATION_ID")
+    @Column("DESTINATION_ID")
     private String destinationId;
 
-    @Column(name = "END_TO_END_ID")
+    @Column("END_TO_END_ID")
     private String endToEndId;
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
+    @Version
+    private Long version;
 
-        if (obj == null || obj.getClass() != getClass()) return false;
-
-        Transaction that = (Transaction) obj;
-
-        return new EqualsBuilder()
-                .append(accountId, that.accountId)
-                .append(transactionId, that.transactionId)
-                .append(creationDate, that.creationDate)
-                .append(statusType, that.statusType)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(accountId)
-                .append(transactionId)
-                .append(creationDate)
-                .hashCode();
-    }
 }

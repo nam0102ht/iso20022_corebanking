@@ -15,7 +15,7 @@ public class HistoryService {
     public GenericSingleRestResponse saveTopUpTransactionAsyncAsHistory(final Document document, final String accountId, final GenericSingleRestResponse genericSingleRestResponse) {
         service.saveTopUpTransaction(document, accountId, StatusType.PENDING)
                 .forEach(transaction -> genericSingleRestResponse.getCdtTrfTxInfSts().add(
-                        new CreditTransferTransaction30Status(null, transaction.getEndToEndId(), transaction.getTransactionId(), null, true, null, null)));
+                        new CreditTransferTransaction30Status(null, transaction.getEndToEndId(), transaction.getId(), null, true, null, null)));
         return genericSingleRestResponse;
     }
 

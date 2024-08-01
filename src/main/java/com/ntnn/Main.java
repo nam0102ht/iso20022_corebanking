@@ -3,12 +3,12 @@ package com.ntnn;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.security.Security;
 
 @SpringBootApplication
-@EnableR2dbcRepositories
+@EnableAsync
 public class Main {
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);

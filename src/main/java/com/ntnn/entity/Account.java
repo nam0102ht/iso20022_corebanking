@@ -2,17 +2,20 @@ package com.ntnn.entity;
 
 import com.ntnn.common.Currency;
 import com.ntnn.common.WalletType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Version;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.Date;
 
@@ -21,23 +24,28 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table("ACCOUNT")
+@Table(name = "ACCOUNT")
+@Builder
+@Entity(name = "account")
 public class Account {
     @Id
+    @Column(name = "ACCOUNT_ID")
     private String accountId;
 
-    @Column("WALLET_TYPE")
-    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "WALLET_TYPE")
+    @Enumerated(EnumType.STRING)
     private WalletType walletType;
 
-    @Column("CURRENCY")
-    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "CURRENCY")
+    @Enumerated(EnumType.STRING)
     private Currency currency;
 
-    @Column("CREATION_DATE")
+    @Column(name = "CREATION_DATE")
+    @CreatedDate
     private Date creationDate;
 
     @Version
+    @Column(name = "VERSION")
     private Long version;
 
 }

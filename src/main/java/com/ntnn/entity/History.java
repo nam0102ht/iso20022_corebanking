@@ -4,9 +4,17 @@ import com.ntnn.common.Currency;
 import com.ntnn.common.StatusType;
 import com.ntnn.common.WalletType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,11 +22,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Version;
 
 import java.util.Date;
-import java.util.UUID;
-
 
 @Data
 @Setter
@@ -28,28 +33,38 @@ import java.util.UUID;
 @Builder
 @Table(name = "HISTORY")
 @EqualsAndHashCode
+@Entity(name = "history")
 public class History {
   @Id
-  private UUID id;
+  @Column(name = "ID")
+  private String id;
 
-  @Column(name = "ACCOUNT_ID")
-  private String accountId;
+  @Transient
+  @OneToOne
+  @JoinColumn(name = "ACCOUNT_ID", referencedColumnName = "accountId")
+  private Account account;
 
-  @Column(name = "TRANSACTION_ID")
-  private String transactionId;
+  @Transient
+  @OneToOne
+  @JoinColumn(name = "transaction", referencedColumnName = "id")
+  private Transaction transaction;
 
   @Column(name = "CREATION_DATE")
   private Date creationDate;
 
   @Column(name = "WALLET_TYPE")
+  @Enumerated(EnumType.STRING)
   private WalletType walletType;
 
   @Column(name = "CURRENCY")
+  @Enumerated(EnumType.STRING)
   private Currency currency;
 
   @Column(name = "STATUS_TYPE")
+  @Enumerated(EnumType.STRING)
   private StatusType statusType;
 
   @Version
+  @Column(name = "VERSION")
   private Long version;
 }

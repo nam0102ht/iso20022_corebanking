@@ -11,12 +11,9 @@ import com.ntnn.repository.TransactionByCustomerRepository;
 import com.ntnn.wsld.Document;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 
-import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -27,17 +24,19 @@ public class DatabaseImplService {
     private final TransactionByCustomerRepository transactionByCustomerRepository;
     private final HistoryRepository historyRepository;
 
-    public Flux<Transaction> saveTopUpTransactionAsync(Document document, String accountId, StatusType statusType) {
+    public List<Transaction> saveTopUpTransactionAsync(Document document, String accountId, StatusType statusType) {
         Set<Transaction> transactionSet = Iso20022TransactionHelper.populateTransaction(document.getFIToFICstmrCdtTrf(), accountId, TransactionType.TOPUP.name(), statusType);
-        return asyncTransactionByCustomerRepository.saveAll(transactionSet).log().onErrorReturn(null);
+
+
+        return asyncTransactionByCustomerRepository.saveAll(transactionSet);
     }
 
-    public Iterable<Transaction> saveTopUpTransaction(Document document, String accountId, StatusType statusType) {
+    public List<Transaction> saveTopUpTransaction(Document document, String accountId, StatusType statusType) {
         Set<Transaction> transactionSet = Iso20022TransactionHelper.populateTransaction(document.getFIToFICstmrCdtTrf(), accountId, TransactionType.TRANSFER.name(), statusType);
-        return transactionByCustomerRepository.saveAll(transactionSet).log().toIterable();
+        return transactionByCustomerRepository.saveAll(transactionSet);
     }
 
-    public Flux<History> saveHistoryTransactionAsync(Document document, String accountId, StatusType statusType) {
+    public List<History> saveHistoryTransactionAsync(Document document, String accountId, StatusType statusType) {
         Set<History> histories = Iso20022TransactionHelper.populateHistory(document.getFIToFICstmrCdtTrf(), accountId, statusType);
         return historyRepository.saveAll(histories);
     }

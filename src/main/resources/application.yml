@@ -1,10 +1,23 @@
 spring:
   application:
     name: transfer
-  r2dbc:
-    url: r2dbc:postgresql://localhost:5432/postgres
+  flyway:
+    enabled: true
     username: root
     password: root
+    locations: classpath:src/main/resources/db/migration/base
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: root
+    password: root
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 server:
   port: 8083

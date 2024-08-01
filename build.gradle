@@ -5,7 +5,6 @@ plugins {
     id "com.avast.gradle.docker-compose" version "0.17.4"
     id 'application'
     id 'jacoco'
-//    id "com.github.bjornvester.xjc" version "1.8.1"
 }
 
 group = 'com.ntnn'
@@ -29,12 +28,12 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
-    implementation 'io.r2dbc:r2dbc-postgresql:0.8.13.RELEASE'
+
     implementation 'org.json:json:20240303'
-    implementation 'org.postgresql:postgresql:42.7.3'
     implementation 'org.apache.commons:commons-lang3:3.14.0'
-    implementation 'org.springframework:spring-webflux:6.1.11'
+
+    implementation 'org.postgresql:postgresql:42.7.3'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.3.2'
 
     implementation 'com.prowidesoftware:pw-iso20022:SRU2023-10.1.3'
     compileOnly 'jakarta.persistence:jakarta.persistence-api:3.1.0'

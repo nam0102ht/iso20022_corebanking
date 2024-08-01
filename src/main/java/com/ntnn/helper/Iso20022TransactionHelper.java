@@ -4,6 +4,7 @@ import com.ntnn.common.Currency;
 import com.ntnn.common.StatusType;
 import com.ntnn.common.TransactionType;
 import com.ntnn.common.WalletType;
+import com.ntnn.entity.Account;
 import com.ntnn.entity.History;
 import com.ntnn.entity.Transaction;
 import com.ntnn.wsld.FIToFICustomerCreditTransferV07;
@@ -26,9 +27,9 @@ public class Iso20022TransactionHelper {
                     model.getCdtTrfTxInf().get(i).getCdtrAgt().getFinInstnId().getOthr().getId() : model.getCdtTrfTxInf().get(i).getCdtrAgt().getFinInstnId().getBICFI();
 
             Transaction transaction = new Transaction();
-            transaction.setId(UUID.randomUUID());
-            transaction.setAccountId(accountId);
-            transaction.setTransactionId(model.getCdtTrfTxInf().get(i).getPmtId().getTxId());
+            transaction.setId(UUID.randomUUID().toString());
+            transaction.setAccount(Account.builder().accountId(accountId).build());
+            transaction.setId(model.getCdtTrfTxInf().get(i).getPmtId().getTxId());
             transaction.setTransactionType(TransactionType.valueOf(transactionType));
             transaction.setCreationDate(model.getGrpHdr().getCreDtTm().toGregorianCalendar().getTime());
             transaction.setAmount(model.getCdtTrfTxInf().get(i).getIntrBkSttlmAmt().getValue());
@@ -51,9 +52,9 @@ public class Iso20022TransactionHelper {
             Currency currency = Currency.valueOf(model.getCdtTrfTxInf().get(i).getIntrBkSttlmAmt().getCcy());
 
             History history = new History();
-            history.setTransactionId(model.getCdtTrfTxInf().get(i).getPmtId().getTxId());
-            history.setAccountId(accountId);
-            history.setId(UUID.randomUUID());
+            history.setTransaction(Transaction.builder().id(model.getCdtTrfTxInf().get(i).getPmtId().getTxId()).build());
+            history.setAccount(Account.builder().accountId(accountId).build());
+            history.setId(UUID.randomUUID().toString());
             history.setCurrency(currency);
             history.setStatusType(statusType);
             history.setWalletType(walletType);
@@ -62,8 +63,8 @@ public class Iso20022TransactionHelper {
             history.setStatusType(statusType);
 
             transactions.add(History.builder()
-                    .accountId(history.getAccountId())
-                    .transactionId(history.getTransactionId())
+                    .account(history.getAccount())
+                    .transaction(history.getTransaction())
                     .creationDate(history.getCreationDate())
                     .walletType(history.getWalletType())
                     .currency(history.getCurrency())

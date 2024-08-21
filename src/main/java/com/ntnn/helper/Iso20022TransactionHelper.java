@@ -38,6 +38,7 @@ public class Iso20022TransactionHelper {
             transaction.setDestinationId(destinationId);
             transaction.setEndToEndId(endToEndId);
             transactions.add(transaction);
+            transaction.setVersion(1l);
         }
         return transactions;
     }
@@ -61,6 +62,7 @@ public class Iso20022TransactionHelper {
             history.setCurrency(currency);
             history.setCreationDate(new Date(model.getGrpHdr().getCreDtTm().toGregorianCalendar().toZonedDateTime().toEpochSecond()));
             history.setStatusType(statusType);
+            history.setVersion(0l);
 
             transactions.add(History.builder()
                     .account(history.getAccount())
@@ -69,6 +71,7 @@ public class Iso20022TransactionHelper {
                     .walletType(history.getWalletType())
                     .currency(history.getCurrency())
                     .statusType(history.getStatusType())
+                    .version(1l)
                     .build());
         }
         return transactions;

@@ -32,15 +32,24 @@ public class KeyStorage {
   @Column(name = "PRIVATE_KEY")
   private String privateKey;
 
-  @Column(name = "PUBLIC_KEY")
-  private String publicKey;
-
   @Column(name = "PUBLIC_KEY_CLIENT")
   private String publicKeyClient;
+
+  @Column(name = "SECRET_KEY_AGREEMENT")
+  private String secretKeyAgreement;
+
+  @Column(name = "PUBLIC_KEY_SERVER")
+  private String publicKeyServer;
 
   @Column(name = "SECRET_KEY")
   private String secretKey;
 
   @Column(name = "EXPIRE_TIME")
   private String expireTime;
+
+  @Column(name = "SALT")
+  private String salt;
+
+  @Column(name = "PEPPER")
+  private String pepper;
 }

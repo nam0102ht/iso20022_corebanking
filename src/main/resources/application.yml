@@ -20,7 +20,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 server:
-  port: 8083
+  port: 8091
   servlet:
     contextPath: /transfer
 
@@ -36,3 +36,44 @@ management:
     web:
       exposure:
         include: '*'
+
+caching:
+  spring:
+    hotelListTTL: 43200
+
+
+resilience4j:
+  retry:
+    configs:
+      default:
+        maxAttemps: 1
+  timelimiter:
+    instances:
+      invokeClient:
+        timeoutDuration: 14s
+  circuitbreaker:
+    configs:
+      default:
+        registerHealthIndicator: true
+        slidingWindowSize: 1000
+        minimumNumberOfCalls: 1000
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 100
+        eventConsumerBufferSize: 5000
+    instances:
+      externalService:
+        baseConfig: default
+  ratelimiter:
+    configs:
+      default:
+        limit-for-period: 10000
+        limit-refresh-period: 100
+        timeout-duration: 0s
+        allow-health-indicator-to-fail: true
+        subscribe-for-events: true
+        event-consumer-buffer-size: 5000
+    instances:
+      externalService:
+        baseConfig: default

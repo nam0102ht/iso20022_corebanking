@@ -10,6 +10,7 @@ import com.ntnn.repository.HistoryRepository;
 import com.ntnn.repository.TransactionByCustomerRepository;
 import com.ntnn.wsld.Document;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class DatabaseService {
         return transactionByCustomerRepository.saveAll(transactionSet);
     }
 
+    @Cacheable(value = "getTransactionHistoryByCustomer")
     public Slice<Transaction> getTransactionHistoryByCustomer(String transactionId, String accountId, Date startDate, Date endDate, Pageable pageable) {
         return transactionByCustomerRepository.findAllByTransactionIdAccountIdAndTransactionKeyCreationDateIsBetween(transactionId, accountId, startDate, endDate, pageable);
     }

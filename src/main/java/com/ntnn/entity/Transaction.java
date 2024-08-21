@@ -73,6 +73,6 @@ public class Transaction {
 
     @Version
     @Column(name = "VERSION")
-    private Long version;
+    private long version;
 
 }

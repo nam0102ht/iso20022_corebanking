@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class Iso20022TransactionHelper {
-    public static Set<Transaction> populateTransaction(FIToFICustomerCreditTransferV07 model, String accountId, String transactionType, StatusType statusType) {
+    public static Set<Transaction> populateTransaction(FIToFICustomerCreditTransferV07 model, Account account, String transactionType, StatusType statusType) {
         Set<Transaction> transactions = new HashSet<>(model.getCdtTrfTxInf().size());
         for (int i = 0; i < model.getCdtTrfTxInf().size(); i++) {
             String sourceId = model.getCdtTrfTxInf().get(i).getDbtrAcct().getId().getOthr().getId();
@@ -28,7 +28,7 @@ public class Iso20022TransactionHelper {
 
             Transaction transaction = new Transaction();
             transaction.setId(UUID.randomUUID().toString());
-            transaction.setAccount(Account.builder().accountId(accountId).build());
+            transaction.setAccount(account);
             transaction.setId(model.getCdtTrfTxInf().get(i).getPmtId().getTxId());
             transaction.setTransactionType(TransactionType.valueOf(transactionType));
             transaction.setCreationDate(model.getGrpHdr().getCreDtTm().toGregorianCalendar().getTime());
@@ -37,14 +37,17 @@ public class Iso20022TransactionHelper {
             transaction.setDestinationName(destinationName);
             transaction.setDestinationId(destinationId);
             transaction.setEndToEndId(endToEndId);
+            transaction.setSourceName(sourceName);
             transactions.add(transaction);
-            transaction.setVersion(1l);
+            transaction.setStatusType(statusType);
+            transaction.setVersion(1L);
         }
         return transactions;
     }
 
     public static Set<History> populateHistory(FIToFICustomerCreditTransferV07 model,
-                                               String accountId,
+                                               Account account,
+                                               Transaction transaction,
                                                StatusType statusType
     ) {
         Set<History> transactions = new HashSet<>(model.getCdtTrfTxInf().size());
@@ -54,7 +57,7 @@ public class Iso20022TransactionHelper {
 
             History history = new History();
             history.setTransaction(Transaction.builder().id(model.getCdtTrfTxInf().get(i).getPmtId().getTxId()).build());
-            history.setAccount(Account.builder().accountId(accountId).build());
+            history.setAccount(account);
             history.setId(UUID.randomUUID().toString());
             history.setCurrency(currency);
             history.setStatusType(statusType);
@@ -62,7 +65,8 @@ public class Iso20022TransactionHelper {
             history.setCurrency(currency);
             history.setCreationDate(new Date(model.getGrpHdr().getCreDtTm().toGregorianCalendar().toZonedDateTime().toEpochSecond()));
             history.setStatusType(statusType);
-            history.setVersion(0l);
+            history.setTransaction(transaction);
+            history.setVersion(1L);
 
             transactions.add(History.builder()
                     .account(history.getAccount())

@@ -3,6 +3,7 @@ package com.ntnn.entity;
 import com.ntnn.common.Currency;
 import com.ntnn.common.StatusType;
 import com.ntnn.common.WalletType;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,6 +12,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -36,17 +39,16 @@ import java.util.Date;
 @Entity(name = "history")
 public class History {
   @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
   @Column(name = "ID")
   private String id;
 
-  @Transient
-  @OneToOne
-  @JoinColumn(name = "ACCOUNT_ID", referencedColumnName = "accountId")
+  @ManyToOne(cascade = CascadeType.PERSIST)
+  @JoinColumn(name = "account", referencedColumnName = "ACCOUNT_ID")
   private Account account;
 
-  @Transient
-  @OneToOne
-  @JoinColumn(name = "transaction", referencedColumnName = "id")
+  @ManyToOne(cascade = CascadeType.PERSIST)
+  @JoinColumn(name = "transaction", referencedColumnName = "TRANSACTION_ID")
   private Transaction transaction;
 
   @Column(name = "CREATION_DATE")

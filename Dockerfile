@@ -5,7 +5,7 @@ FROM openjdk:17-alpine
 ARG BUILD_PATH="./build"
 ARG ARTIFACT_PATH="libs"
 ARG APPLICATION_PATH="app"
-ARG JAR_FILE="fulfillment-offline.batch-1.0.0.jar"
+ARG JAR_FILE=".jar"
 
 ############ Definition Environment Variable on Container ############
 ENV TZ=Asia/Bangkok
